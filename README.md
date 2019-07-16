@@ -25,6 +25,14 @@ Hello Closures!
 Hello Closures!
 ```
 
+func applyKTimes (_ k: Int, _ closure: () -> ()) {
+for i in 1...k {
+       closure()
+}
+}
+
+applyKTimes(3, { print("Hello Closures!") })
+
 
 ## Question 2
 
@@ -37,6 +45,10 @@ Input: `let numbers = [1, 2, 3, 4, 6, 8, 9, 3, 12, 11]`
 
 Expected values: `multiples = [3, 6, 9, 3, 12]`
 
+let multiples = numbers.filter({ a -> Bool in
+return a % 3 == 0
+} )
+
 
 ## Question 3
 
@@ -47,6 +59,10 @@ Input: `let numbers = [4, 7, 1, 9, 6, 5, 6, 9]`
 
 Output: `9`
 
+let reduceToFindLargestElement = numbers.reduce( 0, {x, y in
+return x > y ? x : y
+} )
+
 
 ## Question 4
 
@@ -56,6 +72,14 @@ Example:
 Input: `let strings = ["We", "Heart", "Swift"]`
 
 Output: `"We Heart Swift"`
+
+let strings = ["We", "Heart", "Swift"]
+
+let sentence = strings.reduce( "", { (x,y) -> String in
+return x + " " + y
+}
+)
+print(sentence)
 
 
 ## Question 5
@@ -69,6 +93,26 @@ b. Use `sortedBy` to sort `cities` alphabetical order of the second character of
 c. Use `sortedBy` to sort `cities` in order of the length of the city name.
 
 
+//a. Use `sortedBy` to sort `cities` in alphabetical order.
+
+let alphabetical = cities.sorted(by: <)
+
+//b. Use `sortedBy` to sort `cities` alphabetical order of the second character of the city name.
+
+let secondCharacter = cities.sorted(by: { ( a,b ) -> Bool in
+return a.dropFirst() < b.dropFirst()
+
+})
+
+//c. Use `sortedBy` to sort `cities` in order of the length of the city name.
+
+let byLength = cities.sorted( by: { (a,b) -> Bool in
+return a.count < b.count
+})
+
+
+
+
 ## Question 6
 
 `let citiesWithPopulation: [(String, Int)] = [("Shanghai", 24256800), ("Beijing", 21516000), ("Delhi", 16787941), ("Lagos", 16060303), ("Tianjin", 15200000), ("Karachi", 14910352), ("Karachi", 14160467), ("Tokyo", 13513734), ("Guangzhou", 13080500), ("Mumbai", 12442373), ("Moscow", 12380664), ("São Paulo", 12038175)]`
@@ -77,6 +121,17 @@ a. Use `sortedBy` to sort `citiesWithPopulation` in ascending order of populatio
 
 b. Use `sortedBy` to sort `citiesWithPopulation` in reverse alphabetical order of the last character in the city name.
 
+//a. Use `sortedBy` to sort `citiesWithPopulation` in ascending order of population.
+//
+let cityByPop = citiesWithPopulation.sorted(by: { (a,b) -> Bool in
+return a.1 < b.1
+})
+
+//b. Use `sortedBy` to sort `citiesWithPopulation` in reverse alphabetical order of the last character in the city name.
+
+let lastLetter = citiesWithPopulation.sorted(by: { (a,b) -> Bool in
+return a.0.last! < b.0.last!
+})
 
 ## Question 7
 
@@ -99,6 +154,21 @@ numbers = [1, 2, 3, 5, 4, 6]
 // [1, 5, 2, 3, 4, 6] would also have been a valid solution
 ```
 
+var numbers = [1, 2, 3, 4, 5, 6]
+
+let divisors = numbers.sorted(by: { x,y in
+func countDivisors(_ number: Int) -> Int {
+var counter = 0
+for i in 1...number {
+if number % i == 0 {
+counter += 1
+}
+}
+return counter
+}
+return countDivisors(x) < countDivisors(y)
+})
+print(divisors)
 
 ## Question 8
 
@@ -118,6 +188,32 @@ Example:
 Input: `var numbers = [1, 2, 3, 4, 5, 6]`
 
 Output: `35 // 1 + 9 + 25 -> 35`
+
+var numbers = [1, 2, 3, 4, 5, 6]
+
+let sumOfSquares = numbers.filter {
+$0 % 2 == 1
+}.map {
+$0 * $0
+}.reduce(0) {$0 + $1}
+
+print(sumOfSquares)
+
+
+
+//a. Write code that removes all the odd numbers from the array.
+
+let onlyEvens = numbers.filter( { a -> Bool in return a % 2 == 0 })
+
+//
+//b. Write code that squares all the numbers in the array.
+
+let squared = numbers.map( {a -> Int in return a * a } )
+
+//
+//c. Write code that finds the sum of the array.
+
+let sum = numbers.reduce(0, {(x,y) -> Int in x + y})
 
 
 ## Question 9
@@ -142,6 +238,16 @@ Output:
 16
 ```
 
+
+func forEach(_ array: [Int], _ closure: (Int) -> ()) {
+for i in array {
+closure(i)
+}
+}
+
+forEach([1,2,3,4], {print($0 * $0)})
+
+
 ## Question 10
 
 Implement a function `combineArrays` that takes 2 arrays and a closure that combines 2 Ints into a single Int. The function combines the two arrays into a single array using the provided closure. Assume that the 2 arrays have equal length.
@@ -158,6 +264,20 @@ combineArrays(array1,array2) {
 ```
 
 Output: `[5,10,15,12]`
+
+
+var array1 = [1,2,3,4]
+var array2 = [5,5,5,3]
+
+func combineArrays(_ array1: [Int], _ array2: [Int], closure: (Int, Int) -> Int) -> [Int] {
+var newArray: [Int] = []
+for i in 0...array1.count - 1 {
+newArray.append(closure(array1[i], array2[i]))
+}
+return newArray
+}
+
+print(combineArrays(array1, array2, closure: { $0 * $1 }))
 
 
 ## Question 11
